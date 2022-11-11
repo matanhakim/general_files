@@ -35,9 +35,19 @@ yishuvim_2 <- yishuvim_2 %>%
   select(!name) %>% 
   distinct(yishuv_name, .keep_all = TRUE)
 
+# Yishuvim as municipalities from CBS municipalities list, education ministry and tax authority using my own data file
+yishuvim_3 <- read_csv("muni_ids.csv")
+
+yishuvim_3 <- yishuvim_3 %>% 
+  select(!c(edu_id, tax_id)) %>% 
+  pivot_longer(!cbs_id, names_to = "var", values_to = "yishuv_name") %>% 
+  rename(yishuv_id = cbs_id) %>%
+  select(!var) %>% 
+  distinct(yishuv_name, .keep_all = TRUE)
+
 # Join data frames together
 yishuvim <- yishuvim %>% 
-  bind_rows(yishuvim_2) %>% 
+  bind_rows(yishuvim_2, yishuvim_3) %>% 
   distinct(yishuv_name, .keep_all = TRUE)
 
 # Write the CSV file
