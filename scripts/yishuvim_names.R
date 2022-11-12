@@ -3,7 +3,7 @@ library(tidyverse)
 library(readxl)
 library(httr)
 
-# Yishuvim from the CBS file
+# Yishuvim from the CBS file, both Hebrew and English
 url <- "https://www.cbs.gov.il/he/publications/doclib/2019/ishuvim/bycode2021.xlsx"
 file_ext <- str_extract(url, "[0-9a-z]+$")
 GET(url, write_disk(tf <- tempfile(fileext = file_ext)))  
@@ -13,11 +13,16 @@ yishuvim <- read_excel(tf, col_types = "text")
 yishuvim <- yishuvim %>% 
   select(
     yishuv_id = 2,
-    yishuv_name = 1
+    yishuv_name = 1,
+    yishuv_name_eng_1 = 25
   ) %>% 
   mutate(
-    yishuv_id = str_pad(yishuv_id, width = 4, side = "left", pad = "0")
-  )
+    yishuv_id = str_pad(yishuv_id, width = 4, side = "left", pad = "0"),
+    yishuv_name_eng_2 = str_to_lower(yishuv_name_eng_1),
+    yishuv_name_eng_3 = str_to_upper(yishuv_name_eng_1)
+  ) %>% 
+  pivot_longer(!yishuv_id, names_to = "name", values_to = "yishuv_name") %>% 
+  select(!name)
 
 # Yishuvim from Ido Lan
 yishuvim_2 <- read_excel("yishuvim_names_files/yishuvim_ido_lan.xls", col_types = "text")
