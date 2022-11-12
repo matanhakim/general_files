@@ -50,9 +50,13 @@ yishuvim_3 <- yishuvim_3 %>%
   select(!var) %>% 
   distinct(yishuv_name, .keep_all = TRUE)
 
+# Yishuvim from the list of regitered amutot from Guidestar.
+# These id's were chosen by hand for each yishuv that did not match the existing names so far.
+yishuvim_4 <- read_csv("yishuvim_names_files/yishuvim_orgs1.csv", col_types = "c")
+
 # Join data frames together
 yishuvim <- yishuvim %>% 
-  bind_rows(yishuvim_2, yishuvim_3) %>% 
+  bind_rows(yishuvim_2, yishuvim_3, yishuvim_4) %>% 
   distinct(yishuv_name, .keep_all = TRUE)
 
 # Write the CSV file
