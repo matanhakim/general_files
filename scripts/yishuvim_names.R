@@ -44,6 +44,7 @@ yishuvim_2 <- yishuvim_2 %>%
 yishuvim_3 <- read_csv("muni_ids.csv")
 
 yishuvim_3 <- yishuvim_3 %>% 
+  filter(str_length(cbs_id) > 2) %>% 
   select(!c(edu_id, tax_id)) %>% 
   pivot_longer(!cbs_id, names_to = "var", values_to = "yishuv_name") %>% 
   rename(yishuv_id = cbs_id) %>%
