@@ -55,10 +55,14 @@ yishuvim_3 <- yishuvim_3 %>%
 # These id's were chosen by hand for each yishuv that did not match the existing names so far.
 yishuvim_4 <- read_csv("yishuvim_names_files/yishuvim_orgs1.csv", col_types = "c")
 yishuvim_5 <- read_csv("yishuvim_names_files/yishuvim_orgs2.csv", col_types = "c")
-
+yishuvim_6 <- tribble(
+  ~ yishuv_id, ~ yishuv_name,
+  "0217", "כפר הרא~ה",
+  "0696", "כפר חב~ד"
+)
 # Join data frames together
 yishuvim <- yishuvim %>% 
-  bind_rows(yishuvim_2, yishuvim_3, yishuvim_4, yishuvim_5) %>% 
+  bind_rows(yishuvim_2, yishuvim_3, yishuvim_4, yishuvim_5, yishuvim_6) %>% 
   distinct(yishuv_name, .keep_all = TRUE)
 
 # Write the CSV file
