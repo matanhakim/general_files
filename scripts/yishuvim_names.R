@@ -22,24 +22,56 @@ yishuvim <- yishuvim %>%
   select(!name)
 
 # Yishuvim as municipalities from CBS municipalities list, education ministry and tax authority using my own data file
-yishuvim_3 <- read_csv("muni_ids.csv")
-
-yishuvim_3 <- yishuvim_3 %>% 
-  filter(str_length(cbs_id) > 2) %>% 
-  select(!c(edu_id, tax_id)) %>% 
-  pivot_longer(!cbs_id, names_to = "var", values_to = "yishuv_name") %>% 
-  rename(yishuv_id = cbs_id) %>%
-  select(!var) %>% 
+yishuvim_2 <- read_csv("muni_ids.csv", col_types = cols(.default = "c")) |> 
+  select(!c(edu_id, tax_id)) |> 
+  pivot_longer(!cbs_id, names_to = "var", values_to = "yishuv_name") |> 
+  rename(yishuv_id = cbs_id) |>
+  select(!var) |> 
   distinct(yishuv_name, .keep_all = TRUE)
 
-# Yishuvim from the list of regitered amutot from Guidestar.
+# Yishuvim from the list of regsitered amutot from Guidestar.
 # These id's were chosen by hand for each yishuv that did not match the existing names so far.
-yishuvim_4 <- read_csv("yishuvim_names_files/yishuvim_orgs1.csv", col_types = "c")
-yishuvim_5 <- read_csv("yishuvim_names_files/yishuvim_orgs2.csv", col_types = "c")
-yishuvim_6 <- tribble(
-  ~ yishuv_id, ~ yishuv_name,
-  "0217", "כפר הרא~ה",
-  "0696", "כפר חב~ד"
+yishuvim_3 <- tibble(
+  yishuv_name = c(
+    "תל אביב - יפו",
+    "דנ גליל עליון",
+    "מעין ברוך", 
+    "בנימינה",
+    "דנ חפר",
+    "מא יואב",
+    "עופרה",
+    "פרדס-חנה כרכור",
+    "מא רמת הנגב דנ חלוצה", 
+    "מגד אל-כרום",
+    "חברון", 
+    "מועצה אזורית אשכול",
+    "אז\"ת שער בנימין",
+    "מג'ד אל כרום",
+    "ריחאניה",
+    "צמח",
+    "נתב\"ג",
+    "מא רמת הנגב"
+  ),
+  yishuv_id = c(
+    "5000",
+    "01",
+    "0416",
+    "9800",
+    "16",
+    "35",
+    "3617",
+    "7800",
+    "48",
+    "0516",
+    "1983",
+    "38",
+    "73",
+    "0516",
+    "0540",
+    "1711",
+    "1748",
+    "48"
+  )
 )
 # Join data frames together
 yishuvim <- yishuvim %>% 
