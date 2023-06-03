@@ -5,12 +5,12 @@ library(readxl)
 # Yishuvim from the CBS file, both Hebrew and English
 yishuvim <- read_excel("data/bycode2021.xlsx", col_types = "text")
 
-yishuvim <- yishuvim %>% 
+yishuvim <- yishuvim |> 
   select(
     yishuv_id = 2,
     yishuv_name = 1,
     yishuv_name_eng_1 = 25
-  ) %>% 
+  ) |> 
   mutate(
     yishuv_id = str_pad(yishuv_id, width = 4, side = "left", pad = "0"),
     yishuv_name_eng_2 = str_to_lower(yishuv_name_eng_1),
@@ -73,9 +73,10 @@ yishuvim_3 <- tibble(
     "48"
   )
 )
+
 # Join data frames together
-yishuvim <- yishuvim %>% 
-  bind_rows(yishuvim_2, yishuvim_3, yishuvim_4, yishuvim_5, yishuvim_6) %>% 
+yishuvim <- yishuvim |> 
+  bind_rows(yishuvim_2, yishuvim_3) |> 
   distinct(yishuv_name, .keep_all = TRUE)
 
 # Write the CSV file
