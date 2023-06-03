@@ -1,14 +1,9 @@
 # Load libraries
 library(tidyverse)
 library(readxl)
-library(httr)
 
 # Yishuvim from the CBS file, both Hebrew and English
-url <- "https://www.cbs.gov.il/he/publications/doclib/2019/ishuvim/bycode2021.xlsx"
-file_ext <- str_extract(url, "[0-9a-z]+$")
-GET(url, write_disk(tf <- tempfile(fileext = file_ext)))  
-
-yishuvim <- read_excel(tf, col_types = "text")
+yishuvim <- read_excel("data/bycode2021.xlsx", col_types = "text")
 
 yishuvim <- yishuvim %>% 
   select(
@@ -19,26 +14,12 @@ yishuvim <- yishuvim %>%
   mutate(
     yishuv_id = str_pad(yishuv_id, width = 4, side = "left", pad = "0"),
     yishuv_name_eng_2 = str_to_lower(yishuv_name_eng_1),
-    yishuv_name_eng_3 = str_to_upper(yishuv_name_eng_1)
-  ) %>% 
-  pivot_longer(!yishuv_id, names_to = "name", values_to = "yishuv_name") %>% 
+    yishuv_name_eng_3 = str_to_upper(yishuv_name_eng_1),
+    yishuv_name_eng_4 = str_to_sentence(yishuv_name_eng_1),
+    yishuv_name_eng_5 = str_to_title(yishuv_name_eng_1)
+  ) |> 
+  pivot_longer(!yishuv_id, names_to = "name", values_to = "yishuv_name") |> 
   select(!name)
-
-# Yishuvim from Ido Lan
-yishuvim_2 <- read_excel("yishuvim_names_files/yishuvim_ido_lan.xls", col_types = "text")
-
-yishuvim_2 <- yishuvim_2 %>% 
-  select(
-    yishuv_name_1 = yeshuv,
-    yishuv_name_2 = `fixed name`,
-    yishuv_id = semelyeshuv
-  ) %>% 
-  mutate(
-    yishuv_id = str_pad(yishuv_id, width = 4, side = "left", pad = "0")
-  ) %>% 
-  pivot_longer(!yishuv_id, names_to = "name", values_to = "yishuv_name") %>% 
-  select(!name) %>% 
-  distinct(yishuv_name, .keep_all = TRUE)
 
 # Yishuvim as municipalities from CBS municipalities list, education ministry and tax authority using my own data file
 yishuvim_3 <- read_csv("muni_ids.csv")
